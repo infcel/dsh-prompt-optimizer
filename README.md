@@ -1,5 +1,4 @@
 ![dsh-prompt-optimizer：DeepSeek Harness 的输入框提示词优化插件](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/hero.png?v=2)
-
 <sub>界面示意：实际模型名、字数与耗时随环境变化。</sub>
 
 # @infcel/dsh-prompt-optimizer

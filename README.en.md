@@ -1,5 +1,4 @@
 ![dsh-prompt-optimizer: prompt optimization inside the DeepSeek Harness composer](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/hero.png?v=2)
-
 <sub>UI mock-up: the model name, character counts and timings vary by environment.</sub>
 
 # @infcel/dsh-prompt-optimizer
