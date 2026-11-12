@@ -5,7 +5,7 @@
 
 [简体中文](README.md) · [English](README.en.md)
 
-![npm](https://img.shields.io/npm/v/@infcel/dsh-prompt-optimizer) ![license](https://img.shields.io/npm/l/@infcel/dsh-prompt-optimizer) ![tag](https://img.shields.io/github/v/tag/infcel/dsh-prompt-optimizer)
+![npm](https://img.shields.io/npm/v/@infcel/dsh-prompt-optimizer) ![license](https://img.shields.io/npm/l/@infcel/dsh-prompt-optimizer) ![tag](https://img.shields.io/github/v/tag/infcel/dsh-prompt-optimizer) ![node](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Finfcel%2Fdsh-prompt-optimizer%2Fmain%2Fpackage.json&query=%24.engines.node&label=node&color=339933) ![DSH](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Finfcel%2Fdsh-prompt-optimizer%2Fmain%2Fpackage.json&query=%24.engines.dsh&label=DSH&color=4d6bfe)
 
 **提示词优化。** 给 DeepSeek Harness 的输入框加一个 **✦ 优化**：把随手写下的一句话，改写成结构清楚、约束明确的提示词，替换回输入框，一次撤销就能还原。
 
