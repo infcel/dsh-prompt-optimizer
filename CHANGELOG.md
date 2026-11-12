@@ -1,5 +1,9 @@
 # 更新记录
 
+## 1.0.3
+
+文档版：README 换成亮色示例图并重排图文（顶图 → 上手 → 失败态），验证记录从 README 拆到 `docs/verification.md`，README 只保留结论。无行为变更。
+
 ## 1.0.2 — 2026-11-12
 
 - 打开面板时先按 `/meta` 的 `limits.maxChars` 就地拦下超长草稿（原来只有 Host 侧 413 兜底）。

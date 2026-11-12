@@ -1,4 +1,4 @@
-![dsh-prompt-optimizer：DeepSeek Harness 的输入框提示词优化插件](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/hero.png)
+![dsh-prompt-optimizer：DeepSeek Harness 的输入框提示词优化插件](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/hero.png?v=2)
 
 <sub>界面示意：实际模型名、字数与耗时随环境变化。</sub>
 
@@ -29,14 +29,14 @@ plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
 | 方式 | target |
 | --- | --- |
 | npm 包名 | `@infcel/dsh-prompt-optimizer` |
-| 离线 tgz（`npm run release` 产出） | `/绝对路径/infcel-dsh-prompt-optimizer-1.0.2.tgz` |
+| 离线 tgz（`npm run release` 产出） | `/绝对路径/infcel-dsh-prompt-optimizer-1.0.3.tgz` |
 | 开发中的源码目录 | `<本仓库目录的绝对路径>` |
 
 发布流程见 [`RELEASING.md`](RELEASING.md)。
 
 装好后大概是这样（下方 composer 里就是你的草稿）：
 
-![面板全貌：输入框上方的优化面板与下方 composer 的优化按钮](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel.png)
+![面板全貌：输入框上方的优化面板与下方 composer 的优化按钮](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel.png?v=2)
 
 
 ## 它做什么，不做什么
@@ -110,13 +110,13 @@ plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
 
 **主题。** 面板用 `bg-layer-1`、结果区用 `bg-base`：暗色下两者差一档（#232324 / #151517），亮色下都是纯白、靠 1px 边框划界——这是宿主两套 token 的真实差异，插件不做额外染色。
 
-![深色主题下的同一面板](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel-dark.png)
+![深色主题下的同一面板](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel-dark.png?v=2)
 
 **影响范围。** 只往两个 composer 子槽各注册一项；不替换宿主节点，不 append 到 `document.body`；样式只用 `--dsw-alias-*` / `--dsw-*` token，`<style data-plugin>` 由 `ctx.effect` 注入并随卸载移除；不注册 window 级键盘监听；不访问外部网络，只发同源 `/api/dsh-prompt-optimizer/*`。
 
 ## 失败与降级
 
-![三种失败态：草稿冲突、未提供模型服务、上游 429](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/states.png)
+![三种失败态：草稿冲突、未提供模型服务、上游 429](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/states.png?v=2)
 
 | 情况 | 用户看到什么 |
 | --- | --- |
