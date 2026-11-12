@@ -53,5 +53,13 @@
     "check": "node --check index.js && node --check client.js && node --check lib/heuristic.js && node --check lib/templates.js && node --check lib/sse.js",
     "release": "node scripts/release.mjs"
   },
-  "publishName": "@infcel/dsh-prompt-optimizer"
+  "publishName": "@infcel/dsh-prompt-optimizer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infcel/dsh-prompt-optimizer.git"
+  },
+  "homepage": "https://github.com/infcel/dsh-prompt-optimizer#readme",
+  "bugs": {
+    "url": "https://github.com/infcel/dsh-prompt-optimizer/issues"
+  }
 }

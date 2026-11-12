@@ -2,6 +2,8 @@
 
 给 DeepSeek Harness 的输入框加一个 **✦ 优化** 按钮：把随手写下的一句糙话，改写成结构清楚、约束明确的提示词，替换回输入框，一次 ⌘Z 就能撤回。
 
+已发布：npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-prompt-optimizer) · 仓库 [infcel/dsh-prompt-optimizer](https://github.com/infcel/dsh-prompt-optimizer)
+
 模板思路移植自 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer)，但调用链改成了 DSH 原生：**用当前会话的默认模型，不需要再配一套 API Key**。
 
 ## 定位
