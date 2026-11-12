@@ -2,9 +2,15 @@
 
 <sub>界面示意：实际模型名、字数与耗时随环境变化。</sub>
 
-# 提示词优化 · @infcel/dsh-prompt-optimizer
+# @infcel/dsh-prompt-optimizer
 
-给 DeepSeek Harness 的输入框加一个 **✦ 优化**：把随手写下的一句话，改写成结构清楚、约束明确的提示词，替换回输入框，一次撤销就能还原。
+---
+
+**中文** · [English](README.en.md)
+
+![npm](https://img.shields.io/npm/v/@infcel/dsh-prompt-optimizer) ![license](https://img.shields.io/npm/l/@infcel/dsh-prompt-optimizer) ![tag](https://img.shields.io/github/v/tag/infcel/dsh-prompt-optimizer)
+
+**提示词优化。** 给 DeepSeek Harness 的输入框加一个 **✦ 优化**：把随手写下的一句话，改写成结构清楚、约束明确的提示词，替换回输入框，一次撤销就能还原。
 
 npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-prompt-optimizer) · 仓库 [infcel/dsh-prompt-optimizer](https://github.com/infcel/dsh-prompt-optimizer)
 
@@ -15,7 +21,11 @@ npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-p
 ## 30 秒上手
 
 ```
+# Desktop（应用内插件管理页安装，或让 agent 调这个工具）
 plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
+
+# web / CLI profile（Desktop 的 profile 由 Electron 独占，这条会报 managed exclusively）
+dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 ```
 
 重启 Harness（bundle/patch 是启动快照）→ 输入框右侧出现 **✦ 优化** → 写一句草稿，点它。
