@@ -6,7 +6,7 @@
 
 ---
 
-[中文](README.md) · **English**
+[简体中文](README.md) · **English**
 
 ![npm](https://img.shields.io/npm/v/@infcel/dsh-prompt-optimizer) ![license](https://img.shields.io/npm/l/@infcel/dsh-prompt-optimizer) ![tag](https://img.shields.io/github/v/tag/infcel/dsh-prompt-optimizer)
 
@@ -15,8 +15,6 @@
 npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-prompt-optimizer) · repo [infcel/dsh-prompt-optimizer](https://github.com/infcel/dsh-prompt-optimizer)
 
 The template ideas are ported from [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer); the call path is DSH-native: **it uses the session's default model, so you don't configure a second API key**.
-
----
 
 ## Install in 30 seconds
 

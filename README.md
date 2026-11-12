@@ -6,7 +6,7 @@
 
 ---
 
-**中文** · [English](README.en.md)
+[简体中文](README.md) · [English](README.en.md)
 
 ![npm](https://img.shields.io/npm/v/@infcel/dsh-prompt-optimizer) ![license](https://img.shields.io/npm/l/@infcel/dsh-prompt-optimizer) ![tag](https://img.shields.io/github/v/tag/infcel/dsh-prompt-optimizer)
 
@@ -15,8 +15,6 @@
 npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-prompt-optimizer) · 仓库 [infcel/dsh-prompt-optimizer](https://github.com/infcel/dsh-prompt-optimizer)
 
 模板思路移植自 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer)，调用链改成了 DSH 原生：**用当前会话的默认模型，不需要再配一套 API Key**。
-
----
 
 ## 30 秒上手
 
@@ -47,7 +45,6 @@ dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 装好后大概是这样（下方 composer 里就是你的草稿）：
 
 ![面板全貌：输入框上方的优化面板与下方 composer 的优化按钮](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel.png?v=2)
-
 
 ## 它做什么，不做什么
 
