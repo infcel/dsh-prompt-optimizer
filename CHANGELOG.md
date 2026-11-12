@@ -1,5 +1,11 @@
 # 更新记录
 
+## 1.0.2 — 2026-11-12
+
+- 打开面板时先按 `/meta` 的 `limits.maxChars` 就地拦下超长草稿（原来只有 Host 侧 413 兜底）。
+- 文档修正：安装/回滚命令、升级后的刷新方式（需硬刷新）、失败表里的超长说明、单测数量；移除已失效的 `private: true` 说明。
+- `package.json` 补 `author`；仓库里误提交的 `*.bak-rename` 备份删除并加入 `.gitignore`。
+
 ## 1.0.1 — 2026-11-12
 
 - 包名统一为 `@infcel/dsh-prompt-optimizer`（源码、patch、client 模块 id、本机 profile 依赖全部对齐），发布不再依赖打包期改写。

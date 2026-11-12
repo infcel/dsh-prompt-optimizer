@@ -21,13 +21,13 @@ plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
 也可以装离线包（`npm run release` 产出的 tgz）：
 
 ```
-plugin_manager(action: "install_bundle", target: "/绝对路径/dsh-prompt-optimizer-1.0.0.tgz")
+plugin_manager(action: "install_bundle", target: "/绝对路径/infcel-dsh-prompt-optimizer-1.0.1.tgz")
 ```
 
 开发时指向源码目录即可：
 
 ```
-plugin_manager(action: "install_bundle", target: "/Users/shizhaojun/workspace/dsh/plugins/dsh-prompt-optimizer")
+plugin_manager(action: "install_bundle", target: "<本仓库目录的绝对路径>")
 ```
 
 安装后需要重启一次 Harness（bundle/patch 是启动快照）。装好后输入框右侧出现 ✦ 优化。发布流程见 `RELEASING.md`。
@@ -80,21 +80,21 @@ plugin_manager(action: "install_bundle", target: "/Users/shizhaojun/workspace/ds
 | --- | --- |
 | 宿主没有模型服务 | 面板顶部黄条说明原因；按钮仍可点，但不会发请求 |
 | 上游 429 / 限流 | 面板红条给出可读原因 + **重试** / **复制原文** |
-| 草稿超过 2 万字 | 提交后由 Host 拦下（413），面板红条提示分段优化 |
+| 草稿超过 2 万字 | 打开面板时按 `/meta` 的上限就地拦下并提示分段；即使绕过预检，Host 也会用 413 兜底 |
 | 提交时草稿已变 | 黄条「草稿已变动」，提供**覆盖为新结果**与**取消** |
 | 中途关闭面板 | 请求 abort，控制台不报未捕获错误 |
 | 未登录 / token 失效 | 路由返回 401，面板按错误态显示 |
 
 ## 升级后会发生什么
 
-插件自身升级：改 `client.js` 后刷新页面即可（客户端热加载），改 Host 侧（`index.js` / `lib/*`）需要重启。
+插件自身升级：改 `client.js` 后**硬刷新**（⇧⌘R）即可拿到新客户端——普通刷新可能命中 boot graph 的缓存；改 Host 侧（`index.js` / `lib/*`）需要重启。
 
 宿主升级：如果 `conversation.input.right` 或 `conversation.input.overlay` 被移除/改名，客户端注册会被跳过并打一条 warn，输入框不会多出按钮——不会出现半截 UI。此时需要按新槽位名改 `client.js` 的注册。
 
 ## 回滚
 
 1. 禁用：`plugin_manager(action: "set_plugin", target: "@infcel/dsh-prompt-optimizer", enabled: false)`，重启后按钮与浮层一起消失。
-2. 卸载：`plugin_manager(action: "remove_bundle", target: "dsh-prompt-optimizer")`，再从 profile 的 `package.json` / `dsh.profile.bundles` 里清掉条目。
+2. 卸载：`plugin_manager(action: "remove_bundle", target: "@infcel/dsh-prompt-optimizer")`，再从 profile 的 `package.json` / `dsh.profile.bundles` 里清掉条目。
 3. 安装前备份：profile 的 `package.json.bak-*` 与 `cordis.patch.yml.bak-*`；恢复这两个文件并重启即可回到安装前。
 
 `localStorage` 里的 `dsh.prompt-optimizer.prefs` 不会自动清除，需要手动删（只影响模式默认值）。
@@ -111,7 +111,7 @@ plugin_manager(action: "install_bundle", target: "/Users/shizhaojun/workspace/ds
 ## 开发与测试
 
 ```
-node --test test/*.test.mjs          # 44 passing
+node --test test/*.test.mjs          # 47 passing
 node plugin-dev/scripts/plugin-check.mjs dsh-prompt-optimizer   # 1 PASS / 0 WARN / 0 FAIL
 node --check index.js lib/*.js client.js
 ```
@@ -124,20 +124,20 @@ node --check index.js lib/*.js client.js
 
 因为改写了上游的提示词模板，本插件同样以 **AGPL-3.0-or-later** 发布：仓库内已附 [`LICENSE`](LICENSE) 全文，`package.json` 的 `license` 字段同值。对外分发时请保留上游署名与仓库链接；上游的模板文件位于 `packages/core/src/services/template/default-templates/`。
 
-插件代码里的 `private: true` 只表示不发布到 npm，不代表闭源。
 
 ## 验证记录
 
 | 日期 | 版本 | 验证项 | 结果 |
 | --- | --- | --- | --- |
-| 2026-11-11 | 0.1.0 | 单测 44 条、plugin-check P0–P2 | PASS / 0 WARN / 0 FAIL |
-| 2026-11-11 | 0.1.0 | slot 上屏（input.right + overlay）、`/meta` 四步回落取到真实模型 | 通过，截图确认 |
-| 2026-11-12 | 0.1.0 | 真机：逐字流式、自动识别标签、替换后 ⌘Z 一步还原 | 通过 |
-| 2026-11-12 | 0.1.0 | 真机：草稿冲突拦截、4 秒确认条、模式与语言持久化、⌘↵ 替换 | 通过 |
-| 2026-11-12 | 0.1.0 | 单测 46 条（新增 locale 解析、中英字典对齐） | 通过 |
-| 2026-11-12 | 0.1.0 | 真机：选中一段只改一段，其余文字不动 | 通过 |
-| 2026-11-12 | 0.1.0 | 真机（注入无模型）：面板直接进「未提供模型服务」态，不发请求 | 通过 |
-| 2026-11-12 | 0.1.0 | 真机：含 @ 引用时面板显示「按整段优化」横幅 | 通过 |
-| 2026-11-12 | 0.1.0 | 单测 47 条（新增选区/整段判定） | 通过 |
+| 2026-11-11 | 1.0.0 | 单测 44 条、plugin-check P0–P2 | PASS / 0 WARN / 0 FAIL |
+| 2026-11-11 | 1.0.0 | slot 上屏（input.right + overlay）、`/meta` 四步回落取到真实模型 | 通过，截图确认 |
+| 2026-11-12 | 1.0.0 | 真机：逐字流式、自动识别标签、替换后 ⌘Z 一步还原 | 通过 |
+| 2026-11-12 | 1.0.0 | 真机：草稿冲突拦截、4 秒确认条、模式与语言持久化、⌘↵ 替换 | 通过 |
+| 2026-11-12 | 1.0.0 | 单测 46 条（新增 locale 解析、中英字典对齐） | 通过 |
+| 2026-11-12 | 1.0.0 | 真机：选中一段只改一段，其余文字不动 | 通过 |
+| 2026-11-12 | 1.0.0 | 真机（注入无模型）：面板直接进「未提供模型服务」态，不发请求 | 通过 |
+| 2026-11-12 | 1.0.0 | 真机：含 @ 引用时面板显示「按整段优化」横幅 | 通过 |
+| 2026-11-12 | 1.0.0 | 单测 47 条（新增选区/整段判定） | 通过 |
+| 2026-11-12 | 1.0.1 | 包名统一为 `@infcel/…`，npm 拉回的 tgz 解包跑 `--strict` | PASS |
 
 未验证：超长草稿（>2 万字）真机提示、上游 429 真机复现（错误态用注入方式验过）。英文界面已实机确认。

@@ -38,6 +38,7 @@ window.__ModuleLoader__.load({
 				instruction: '这次怎么改？',
 				instructionPlaceholder: '例如：再短一点，保留变量，加一个「不做」清单',
 				error: '优化失败',
+				tooLong: (n, max) => `草稿 ${n} 字，超过 ${max} 上限，先分段优化`,
 				retry: '重试',
 				copyOriginal: '复制原文',
 				conflict: '草稿已变动，不能直接替换',
@@ -91,6 +92,7 @@ window.__ModuleLoader__.load({
 				instruction: 'What should change?',
 				instructionPlaceholder: 'e.g. shorter, keep variables, add a "don\'t" list',
 				error: 'Optimization failed',
+				tooLong: (n, max) => `Draft is ${n} characters; the limit is ${max}. Optimize it in parts.`,
 				retry: 'Retry',
 				copyOriginal: 'Copy original',
 				conflict: 'Draft changed, cannot replace',
@@ -473,6 +475,11 @@ window.__ModuleLoader__.load({
 			if (!state.open) return;
 			if (meta && meta.model === null) {
 				patch({ status: 'unavailable' });
+				return;
+			}
+			const maxChars = meta?.limits?.maxChars;
+			if (typeof maxChars === 'number' && draft.length > maxChars) {
+				patch({ status: 'error', error: t('tooLong', draft.length, maxChars) });
 				return;
 			}
 			void classify();

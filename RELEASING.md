@@ -14,8 +14,8 @@
 ## 打包
 
 ```
-node scripts/release.mjs --name <最终包名>          # 版本取 package.json
-node scripts/release.mjs --name <最终包名> --version 1.0.1
+npm run release                                    # 版本取 package.json，包名取 package.json
+npm run release -- --version 1.0.2                  # 临时指定版本
 ```
 
 脚本做的事：复制源码到临时目录 → 把 `package.json` 的 `name` 改成目标名、`private` 改成 `false` → 把 `cordis.patch.yml` 里的 `name` 改成同一个名字 → `node --check` 全部 JS → `npm pack` 到 `dist/`。产物只含 `files` 字段列出的 12 个文件（不含 `test/`、`scripts/`）。
@@ -53,7 +53,7 @@ plugin_manager(action: "install_bundle", target: "<包名>")
 
 发布成功后 npm 会先回一句 `Your package is being processed and may take a few minutes to become available`。这段时间：
 
-- `https://registry.npmjs.org/@scope%2Fname/1.0.0`（带版本号的端点）已经是 200，可以先核对 `dist.integrity`；
+- `https://registry.npmjs.org/@infcel%2Fdsh-prompt-optimizer/1.0.1`（带版本号的端点）已经是 200，可以先核对 `dist.integrity`；
 - `npm view <包名>` 要读整份 packument，可能继续 404 几分钟，别当成发布失败。
 
 2027 年 1 月起「带 bypass 2FA 的 token 直接发布」会被取消，届时改用 `npm stage publish` + 人工放行（或 Trusted Publishing/OIDC）。现在这条直接发布仍然有效。
