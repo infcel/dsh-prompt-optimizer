@@ -1,0 +1,65 @@
+# 发布流程
+
+本文只讲「怎么把这个插件发出去」。功能与验证状态见 `README.md`。
+
+## 先选包名
+
+`dsh-prompt-optimizer` 这个最自然的名字 **已经有人在 npm 上占了**（winditer 的 2.0.3，功能高度重合）；`dsh-prompt-optimizer-plugin`、`dsh-prompt-optimize` 也已被占。所以发布前必须先定一个不冲突的名字，两条路：
+
+- **自己的 scope**：`@<npm 用户名>/dsh-prompt-optimizer`。这是最省事的做法，不用赌名字。当前确定的是 **`@infcel/dsh-prompt-optimizer`**，已写在 `package.json` 的 `publishName` 里，`npm run release` 直接用这个名。
+- **不带 scope 的新名字**：先查空不空，`npm view <名字> version` 返回 404 才算空。
+
+本机 profile 里当前装的是 `@local/dsh-prompt-optimizer`（`link:` 到本目录），`@local/` 是本地占位，不能发布。发布包会由脚本改写包名，**不动**源码目录这一份，免得正在跑的实例和 patch 对不上。
+
+## 打包
+
+```
+node scripts/release.mjs --name <最终包名>          # 版本取 package.json
+node scripts/release.mjs --name <最终包名> --version 1.0.1
+```
+
+脚本做的事：复制源码到临时目录 → 把 `package.json` 的 `name` 改成目标名、`private` 改成 `false` → 把 `cordis.patch.yml` 里的 `name` 改成同一个名字 → `node --check` 全部 JS → `npm pack` 到 `dist/`。产物只含 `files` 字段列出的 12 个文件（不含 `test/`、`scripts/`）。
+
+## 发布前必须过的门禁
+
+```
+node --test test/*.test.mjs                                  # 47 条
+node ../plugin-dev/scripts/plugin-check.mjs . --strict        # 0 WARN / 0 FAIL
+node ../plugin-dev/scripts/plugin-check.mjs /tmp/解包目录 --strict
+```
+
+最后一条最容易被跳过：**要验的是 tgz 解包后的那一份**，不是源码目录。解包命令：
+
+```
+mkdir -p /tmp/po-release && tar -xzf dist/<包名>-<版本>.tgz -C /tmp/po-release
+```
+
+## 发布
+
+```
+npm publish /绝对路径/dist/<包名>-<版本>.tgz --access public --registry=https://registry.npmjs.org
+```
+
+两个坑都踩过：
+
+- **tarball 必须给绝对路径**。`npm publish dist/x.tgz` 会被当成 git 依赖去 `ls-remote ssh://git@github.com/...`，报 `Repository not found`。
+- **显式带 `--registry`**。本机 `npm config get registry` 是 npmmirror，不带的话会往镜像发，而镜像不接受 scoped 包发布。
+
+发布后用干净的 profile 装一次，确认能起来再宣布：
+
+```
+plugin_manager(action: "install_bundle", target: "<包名>")
+```
+
+发布成功后 npm 会先回一句 `Your package is being processed and may take a few minutes to become available`。这段时间：
+
+- `https://registry.npmjs.org/@scope%2Fname/1.0.0`（带版本号的端点）已经是 200，可以先核对 `dist.integrity`；
+- `npm view <包名>` 要读整份 packument，可能继续 404 几分钟，别当成发布失败。
+
+2027 年 1 月起「带 bypass 2FA 的 token 直接发布」会被取消，届时改用 `npm stage publish` + 人工放行（或 Trusted Publishing/OIDC）。现在这条直接发布仍然有效。
+
+## 发布后
+
+- 打 tag / 存一份 tgz 到 release 附件，`dist/` 不进 git。
+- 更新 `CHANGELOG.md`，版本号与 `package.json` 对齐。
+- 若上游 `linshenkx/prompt-optimizer` 的模板有更新，先同步 `lib/templates.js` 再发版；许可证是 AGPL-3.0-or-later，改模板不能换许可证。

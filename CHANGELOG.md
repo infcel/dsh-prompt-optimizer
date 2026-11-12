@@ -1,0 +1,13 @@
+# 更新记录
+
+## 1.0.0 — 2026-11-12
+
+首个可发布版本，已发布到 npm：`@infcel/dsh-prompt-optimizer@1.0.0`。功能与验证状态见 README 的「验证记录」。
+
+- 输入框右侧 **✦ 优化** 按钮，面板从输入框上方浮出，逐字流式生成（SSE）。
+- 五个模式：自动、结构化、分析式、精修、迭代；输出语言可跟随原文 / 简体中文 / English。
+- 用当前会话的默认模型（`agentDefaultModel.currentSelection()` 四步回落），不需要另配 API Key；模型缺失时面板直接进降级态，不发请求。
+- 回填是一次可撤销编辑，⌘Z 一步还原；生成期间草稿变动会拦下并要你显式覆盖。
+- `{{变量}}` 逐字保留并在生成后核对缺失；含 `@` 引用时按整段优化并给出横幅提示。
+- 中英双语界面，跟随 Harness 语言设置即时切换。
+- 移植自 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer) 的四个模板，按 AGPL-3.0-or-later 发布。
