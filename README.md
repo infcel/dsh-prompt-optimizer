@@ -4,6 +4,10 @@
 
 npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-prompt-optimizer) · 仓库 [infcel/dsh-prompt-optimizer](https://github.com/infcel/dsh-prompt-optimizer)
 
+![提示词优化面板：输入框上方打开的面板，左侧是模式切换，右侧显示当前默认模型](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel.png)
+
+<sub>界面示意：实际模型名、字数与耗时随环境变化。</sub>
+
 模板思路移植自 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer)，调用链改成了 DSH 原生：**用当前会话的默认模型，不需要再配一套 API Key**。
 
 ---
@@ -102,6 +106,8 @@ plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
 **影响范围。** 只往两个 composer 子槽各注册一项；不替换宿主节点，不 append 到 `document.body`；样式只用 `--dsw-alias-*` / `--dsw-*` token，`<style data-plugin>` 由 `ctx.effect` 注入并随卸载移除；不注册 window 级键盘监听；不访问外部网络，只发同源 `/api/dsh-prompt-optimizer/*`。
 
 ## 失败与降级
+
+![三种失败态：草稿冲突、未提供模型服务、上游 429](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/states.png)
 
 | 情况 | 用户看到什么 |
 | --- | --- |
