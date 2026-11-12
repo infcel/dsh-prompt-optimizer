@@ -21,7 +21,7 @@ plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
 也可以装离线包（`npm run release` 产出的 tgz）：
 
 ```
-plugin_manager(action: "install_bundle", target: "/绝对路径/infcel-dsh-prompt-optimizer-1.0.1.tgz")
+plugin_manager(action: "install_bundle", target: "/绝对路径/infcel-dsh-prompt-optimizer-1.0.2.tgz")
 ```
 
 开发时指向源码目录即可：
@@ -30,19 +30,19 @@ plugin_manager(action: "install_bundle", target: "/绝对路径/infcel-dsh-promp
 plugin_manager(action: "install_bundle", target: "<本仓库目录的绝对路径>")
 ```
 
-安装后需要重启一次 Harness（bundle/patch 是启动快照）。装好后输入框右侧出现 ✦ 优化。发布流程见 `RELEASING.md`。
+要求 DSH ≥ 0.2.0-rc.1、Node 22.19+ 或 24+（见 `package.json` 的 `engines`）。安装后需要重启一次 Harness（bundle/patch 是启动快照）。重启后输入框右侧出现 **✦ 优化**，插件管理页里能看到「提示词优化」，两处都在才算装好。发布流程见 `RELEASING.md`。
 
 ## 用法
 
 1. 在输入框写一段草稿。有选区就只优化选区，没有选区就整段优化。
-2. 点 **✦ 优化**，或直接按按钮；面板从输入框上方浮出，开始逐字流式生成。
+2. 点输入框右侧的 **✦ 优化**；面板从输入框上方浮出，开始逐字流式生成。
 3. 选模式：**自动**（按文本启发式判断）、**结构化**（角色/技能/规则/流程骨架）、**分析式**（补齐背景、约束、输出格式）、**精修**（只修语病与歧义，不动结构）、**迭代**（保留结构，按你写的「这次怎么改」定向修改）。
 4. 输出语言可选：跟随原文 / 简体中文 / English。
 5. 结果可编辑。**替换草稿**（或结果区按 ⌘↵）写回输入框；不满意就**重新优化**或**复制**。
 
 ### 回填与撤销
 
-- 回填是一次独立的可撤销编辑，⌘Z 一步还原（不是逐字撤回）。
+- 回填是一次独立的可撤销编辑，⌘Z（Windows：Ctrl+Z）一步还原，不是逐字撤回。
 - 生成期间如果你改了草稿，替换会被拦下并提示「草稿已变动」，需要显式点**覆盖为新结果**——不会悄悄盖掉你刚写的东西。
 - 替换成功后按钮上方有 4 秒确认条；撤销请用 ⌘Z。
 
@@ -78,7 +78,7 @@ plugin_manager(action: "install_bundle", target: "<本仓库目录的绝对路�
 
 | 情况 | 用户看到什么 |
 | --- | --- |
-| 宿主没有模型服务 | 面板顶部黄条说明原因；按钮仍可点，但不会发请求 |
+| 宿主没有模型服务 | 面板里出一张中性色说明卡（「未提供模型服务」+ 重试/取消）；按钮仍可点，但不会发请求 |
 | 上游 429 / 限流 | 面板红条给出可读原因 + **重试** / **复制原文** |
 | 草稿超过 2 万字 | 打开面板时按 `/meta` 的上限就地拦下并提示分段；即使绕过预检，Host 也会用 413 兜底 |
 | 提交时草稿已变 | 黄条「草稿已变动」，提供**覆盖为新结果**与**取消** |
@@ -89,11 +89,11 @@ plugin_manager(action: "install_bundle", target: "<本仓库目录的绝对路�
 
 插件自身升级：改 `client.js` 后**硬刷新**（⇧⌘R）即可拿到新客户端——普通刷新可能命中 boot graph 的缓存；改 Host 侧（`index.js` / `lib/*`）需要重启。
 
-宿主升级：如果 `conversation.input.right` 或 `conversation.input.overlay` 被移除/改名，客户端注册会被跳过并打一条 warn，输入框不会多出按钮——不会出现半截 UI。此时需要按新槽位名改 `client.js` 的注册。
+宿主升级：如果 `conversation.input.right` 或 `conversation.input.overlay` 被移除/改名，注册会失败，输入框右侧不会出现按钮（不会出现半截 UI），控制台会有宿主抛出的槽位错误。此时按新槽位名改 `client.js` 里的 `SLOT_BUTTON` / `SLOT_PANEL` 即可。
 
 ## 回滚
 
-1. 禁用：`plugin_manager(action: "set_plugin", target: "@infcel/dsh-prompt-optimizer", enabled: false)`，重启后按钮与浮层一起消失。
+1. 禁用：`plugin_manager(action: "set_plugin", target: "include:prompt-optimizer", enabled: false)`（`target` 是 patch 里的条目 id；在 live profile 上开关即时生效，不必重启）。
 2. 卸载：`plugin_manager(action: "remove_bundle", target: "@infcel/dsh-prompt-optimizer")`，再从 profile 的 `package.json` / `dsh.profile.bundles` 里清掉条目。
 3. 安装前备份：profile 的 `package.json.bak-*` 与 `cordis.patch.yml.bak-*`；恢复这两个文件并重启即可回到安装前。
 
@@ -124,7 +124,6 @@ node --check index.js lib/*.js client.js
 
 因为改写了上游的提示词模板，本插件同样以 **AGPL-3.0-or-later** 发布：仓库内已附 [`LICENSE`](LICENSE) 全文，`package.json` 的 `license` 字段同值。对外分发时请保留上游署名与仓库链接；上游的模板文件位于 `packages/core/src/services/template/default-templates/`。
 
-
 ## 验证记录
 
 | 日期 | 版本 | 验证项 | 结果 |
@@ -139,5 +138,8 @@ node --check index.js lib/*.js client.js
 | 2026-11-12 | 1.0.0 | 真机：含 @ 引用时面板显示「按整段优化」横幅 | 通过 |
 | 2026-11-12 | 1.0.0 | 单测 47 条（新增选区/整段判定） | 通过 |
 | 2026-11-12 | 1.0.1 | 包名统一为 `@infcel/…`，npm 拉回的 tgz 解包跑 `--strict` | PASS |
+| 2026-11-12 | 1.0.2 | npm 拉回的 1.0.2 tgz 解包跑 `--strict`；包内确认含超长预检 | PASS |
 
 未验证：超长草稿（>2 万字）真机提示、上游 429 真机复现（错误态用注入方式验过）。英文界面已实机确认。
+
+包名切换（`@local` → `@infcel`）后的本机重启验证尚未做：需要重启一次，确认 `fiberPhase=active` 与两个 slot 的 occupant。
