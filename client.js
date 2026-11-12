@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-	id: '@local/dsh-prompt-optimizer',
+	id: '@infcel/dsh-prompt-optimizer',
 	factory(require) {
 		const React = require('react');
 		const h = React.createElement;

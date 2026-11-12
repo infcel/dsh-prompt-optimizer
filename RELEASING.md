@@ -6,10 +6,10 @@
 
 `dsh-prompt-optimizer` 这个最自然的名字 **已经有人在 npm 上占了**（winditer 的 2.0.3，功能高度重合）；`dsh-prompt-optimizer-plugin`、`dsh-prompt-optimize` 也已被占。所以发布前必须先定一个不冲突的名字，两条路：
 
-- **自己的 scope**：`@<npm 用户名>/dsh-prompt-optimizer`。这是最省事的做法，不用赌名字。当前确定的是 **`@infcel/dsh-prompt-optimizer`**，已写在 `package.json` 的 `publishName` 里，`npm run release` 直接用这个名。
+- **自己的 scope**：`@<npm 用户名>/dsh-prompt-optimizer`。这是最省事的做法，不用赌名字。当前用的就是 **`@infcel/dsh-prompt-optimizer`**，`package.json` 的 `name` 与 `cordis.patch.yml` 的 `name` 已经是它，`npm run release` 直接用。
 - **不带 scope 的新名字**：先查空不空，`npm view <名字> version` 返回 404 才算空。
 
-本机 profile 里当前装的是 `@local/dsh-prompt-optimizer`（`link:` 到本目录），`@local/` 是本地占位，不能发布。发布包会由脚本改写包名，**不动**源码目录这一份，免得正在跑的实例和 patch 对不上。
+本机 profile 里也是同一个名字（`link:` 到本目录），所以打包不需要再改写包名——`scripts/release.mjs` 仍保留 `--name` 参数，换名发布时用。
 
 ## 打包
 

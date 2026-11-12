@@ -28,7 +28,7 @@ const requireStub = (id) => {
 };
 
 assert.ok(captured, 'client.js must register a module');
-assert.equal(captured.id, '@local/dsh-prompt-optimizer');
+assert.equal(captured.id, '@infcel/dsh-prompt-optimizer');
 const mod = captured.factory(requireStub);
 const { createFrameParser, stripFence, DICT, pickLocale, scopeDraft } = mod.__test;
 

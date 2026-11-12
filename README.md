@@ -93,7 +93,7 @@ plugin_manager(action: "install_bundle", target: "/Users/shizhaojun/workspace/ds
 
 ## 回滚
 
-1. 禁用：`plugin_manager(action: "set_plugin", target: "@local/dsh-prompt-optimizer", enabled: false)`，重启后按钮与浮层一起消失。
+1. 禁用：`plugin_manager(action: "set_plugin", target: "@infcel/dsh-prompt-optimizer", enabled: false)`，重启后按钮与浮层一起消失。
 2. 卸载：`plugin_manager(action: "remove_bundle", target: "dsh-prompt-optimizer")`，再从 profile 的 `package.json` / `dsh.profile.bundles` 里清掉条目。
 3. 安装前备份：profile 的 `package.json.bak-*` 与 `cordis.patch.yml.bak-*`；恢复这两个文件并重启即可回到安装前。
 
