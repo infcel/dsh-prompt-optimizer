@@ -4,8 +4,6 @@
 
 # @infcel/dsh-prompt-optimizer
 
----
-
 [简体中文](README.md) · [English](README.en.md)
 
 ![npm](https://img.shields.io/npm/v/@infcel/dsh-prompt-optimizer) ![license](https://img.shields.io/npm/l/@infcel/dsh-prompt-optimizer) ![tag](https://img.shields.io/github/v/tag/infcel/dsh-prompt-optimizer)
