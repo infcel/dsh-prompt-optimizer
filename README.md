@@ -1,12 +1,12 @@
+![dsh-prompt-optimizer：DeepSeek Harness 的输入框提示词优化插件](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/hero.png)
+
+<sub>界面示意：实际模型名、字数与耗时随环境变化。</sub>
+
 # 提示词优化 · @infcel/dsh-prompt-optimizer
 
 给 DeepSeek Harness 的输入框加一个 **✦ 优化**：把随手写下的一句话，改写成结构清楚、约束明确的提示词，替换回输入框，一次撤销就能还原。
 
 npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-prompt-optimizer) · 仓库 [infcel/dsh-prompt-optimizer](https://github.com/infcel/dsh-prompt-optimizer)
-
-![dsh-prompt-optimizer：DeepSeek Harness 的输入框提示词优化插件](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/hero.png)
-
-<sub>界面示意：实际模型名、字数与耗时随环境变化。</sub>
 
 模板思路移植自 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer)，调用链改成了 DSH 原生：**用当前会话的默认模型，不需要再配一套 API Key**。
 
@@ -33,6 +33,11 @@ plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
 | 开发中的源码目录 | `<本仓库目录的绝对路径>` |
 
 发布流程见 [`RELEASING.md`](RELEASING.md)。
+
+装好后大概是这样（下方 composer 里就是你的草稿）：
+
+![面板全貌：输入框上方的优化面板与下方 composer 的优化按钮](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel.png)
+
 
 ## 它做什么，不做什么
 
@@ -69,8 +74,6 @@ plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
 
 ## 交互细节
 
-![面板全貌：输入框上方的优化面板与下方 composer 的优化按钮](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel.png)
-
 **选区。** 有选区就只把选中那截送给模型，回填也只替换那一截；没有选区就整段。
 
 **`@` 引用。** 草稿里带 `@` 引用 chip 时，选区坐标与字符串下标不同源，此时**一律按整段优化**，面板里显示一条「含 @ 引用，按整段优化」的横幅。宁可多改，不会改错位。
@@ -104,6 +107,10 @@ plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
 | 模型调用 | Host `llm.stream()` + `agentDefaultModel.currentSelection()` |
 | 路由 | `GET /api/dsh-prompt-optimizer/meta`、`POST …/classify`、`POST …/optimize`（SSE） |
 | 客户端解析 | SSE 帧解析内联在 `client.js`，单测按 1 字节切分验证 |
+
+**主题。** 面板用 `bg-layer-1`、结果区用 `bg-base`：暗色下两者差一档（#232324 / #151517），亮色下都是纯白、靠 1px 边框划界——这是宿主两套 token 的真实差异，插件不做额外染色。
+
+![深色主题下的同一面板](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel-dark.png)
 
 **影响范围。** 只往两个 composer 子槽各注册一项；不替换宿主节点，不 append 到 `document.body`；样式只用 `--dsw-alias-*` / `--dsw-*` token，`<style data-plugin>` 由 `ctx.effect` 注入并随卸载移除；不注册 window 级键盘监听；不访问外部网络，只发同源 `/api/dsh-prompt-optimizer/*`。
 
