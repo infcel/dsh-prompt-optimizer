@@ -4,7 +4,7 @@
 
 npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-prompt-optimizer) · 仓库 [infcel/dsh-prompt-optimizer](https://github.com/infcel/dsh-prompt-optimizer)
 
-![提示词优化面板：输入框上方打开的面板，左侧是模式切换，右侧显示当前默认模型](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel.png)
+![dsh-prompt-optimizer：DeepSeek Harness 的输入框提示词优化插件](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/hero.png)
 
 <sub>界面示意：实际模型名、字数与耗时随环境变化。</sub>
 
@@ -68,6 +68,8 @@ plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
 「迭代」模式会多出一个输入框，写你这次的修改意图，例如「再短一点，保留变量，加一个「不做」清单」。它是改写指令，不是给模型的追问——插件不会替你执行。
 
 ## 交互细节
+
+![面板全貌：输入框上方的优化面板与下方 composer 的优化按钮](https://raw.githubusercontent.com/infcel/dsh-prompt-optimizer/main/docs/panel.png)
 
 **选区。** 有选区就只把选中那截送给模型，回填也只替换那一截；没有选区就整段。
 
