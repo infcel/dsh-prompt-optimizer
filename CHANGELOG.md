@@ -1,5 +1,11 @@
 # 更新记录
 
+## 1.0.1 — 2026-11-12
+
+- 包名统一为 `@infcel/dsh-prompt-optimizer`（源码、patch、client 模块 id、本机 profile 依赖全部对齐），发布不再依赖打包期改写。
+- 补 `repository` / `homepage` / `bugs`，npm 页面可跳回仓库。
+- 无功能变更，无行为变更。
+
 ## 1.0.0 — 2026-11-12
 
 首个可发布版本，已发布到 npm：`@infcel/dsh-prompt-optimizer@1.0.0`。功能与验证状态见 README 的「验证记录」。
