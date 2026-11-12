@@ -163,26 +163,23 @@ node --check index.js lib/*.js client.js
 
 `client.js` 是 bundle 形式（`window.__ModuleLoader__.load({id, factory})`），插件自己的 `lib/*.js` **不能**被它 `require`——客户端模块加载器只按模块 id 解析，所以 SSE 帧解析内联在 `client.js` 里，测试用假 loader 抓 factory 来跑。
 
+### 验证状态
+
+真机验过的（DSH Desktop，亮 / 暗两套主题）：
+
+- 逐字流式上屏，中途可停止；
+- 有选区只改选中那一段，其余文字不动；
+- 草稿含 `@` 引用时按整段优化，面板显示横幅；
+- 生成期间改草稿会被拦下，可显式覆盖；
+- 替换后一次 ⌘Z 还原；⌘↵ 直接替换；
+- 宿主没有模型时进「未提供模型服务」态，不发请求。
+
+**还没验的**：超过 2 万字的草稿（预检逻辑有单测，真机提示未走过）、上游 429 的真实触发（用注入方式验过错误态）、重启后 `fiberPhase` 与两个 slot occupant 的复核。
+
+逐次记录（日期、版本、当时结论）在 [`docs/verification.md`](https://github.com/infcel/dsh-prompt-optimizer/blob/main/docs/verification.md)。
+
 ## 许可与致谢
 
 模板结构与文案思路来自 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer)（AGPL-3.0），本插件是其 DSH 原生改写。
 
 因为改写了上游的提示词模板，本插件同样以 **AGPL-3.0-or-later** 发布：仓库内附 [`LICENSE`](LICENSE) 全文，`package.json` 的 `license` 字段同值。对外分发请保留上游署名与仓库链接。上游模板位于 `packages/core/src/services/template/default-templates/`。
-
-## 验证记录
-
-| 日期 | 版本 | 验证项 | 结果 |
-| --- | --- | --- | --- |
-| 2026-11-11 | 1.0.0 | 单测 44 条、plugin-check P0–P2 | PASS / 0 WARN / 0 FAIL |
-| 2026-11-11 | 1.0.0 | slot 上屏（input.right + overlay）、`/meta` 四步回落取到真实模型 | 通过，截图确认 |
-| 2026-11-12 | 1.0.0 | 真机：逐字流式、自动识别标签、替换后 ⌘Z 一步还原 | 通过 |
-| 2026-11-12 | 1.0.0 | 真机：草稿冲突拦截、4 秒确认条、模式与语言持久化、⌘↵ 替换 | 通过 |
-| 2026-11-12 | 1.0.0 | 单测 46 条（新增 locale 解析、中英字典对齐） | 通过 |
-| 2026-11-12 | 1.0.0 | 真机：选中一段只改一段，其余文字不动 | 通过 |
-| 2026-11-12 | 1.0.0 | 真机（注入无模型）：面板直接进「未提供模型服务」态，不发请求 | 通过 |
-| 2026-11-12 | 1.0.0 | 真机：含 @ 引用时面板显示「按整段优化」横幅 | 通过 |
-| 2026-11-12 | 1.0.0 | 单测 47 条（新增选区/整段判定） | 通过 |
-| 2026-11-12 | 1.0.1 | 包名统一为 `@infcel/…`，npm 拉回的 tgz 解包跑 `--strict` | PASS |
-| 2026-11-12 | 1.0.2 | npm 拉回的 1.0.2 tgz 解包跑 `--strict`；包内确认含超长预检 | PASS |
-
-未验证：超长草稿（>2 万字）真机提示、上游 429 真机复现（错误态用注入方式验过）、包名切换后的本机重启验证（需重启确认 `fiberPhase=active` 与两个 slot 的 occupant）。英文界面已实机确认。

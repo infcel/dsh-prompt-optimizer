@@ -28,7 +28,7 @@ node ../plugin-dev/scripts/plugin-check.mjs . --strict        # 0 WARN / 0 FAIL
 node ../plugin-dev/scripts/plugin-check.mjs /tmp/解包目录 --strict
 ```
 
-最后一条最容易被跳过：**要验的是 tgz 解包后的那一份**，不是源码目录。解包命令：
+最后一条最容易被跳过：**要验的是 tgz 解包后的那一份**，不是源码目录。跑完在 [`docs/verification.md`](docs/verification.md) 对应版本下追加一行（日期 / 验证项 / 结果）。解包命令：
 
 ```
 mkdir -p /tmp/po-release && tar -xzf dist/<包名>-<版本>.tgz -C /tmp/po-release
