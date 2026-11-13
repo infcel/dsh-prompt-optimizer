@@ -11,33 +11,39 @@
 
 npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-prompt-optimizer) · repo [infcel/dsh-prompt-optimizer](https://github.com/infcel/dsh-prompt-optimizer)
 
-The template ideas are ported from [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer); the call path is DSH-native: **it uses the session's default model, so you don't configure a second API key**.
+The product idea is inspired by [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer): put optimization inside the composer instead of a separate workbench. Templates and code are original to this repo: **it calls the session's default model, so you don't configure a second API key**.
 
 ## Install in 30 seconds
 
-```
-# Desktop (install from the in-app plugin page, or have the agent call this tool)
-plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
+### Desktop
 
-# web / CLI profile (the Desktop profile is owned by Electron; this one errors with "managed exclusively")
+Click **Add plugin** in the plugin manager and paste the package name, or have the agent call the tool:
+
+```
+plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
+```
+
+### web / CLI profile
+
+The Desktop profile is owned by Electron (`dsh plugin --profile desktop add` errors with "managed exclusively"), so this line is for a web or self-hosted profile:
+
+```
 dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 ```
 
-Restart Harness (bundle/patch are a boot snapshot) → a **✦ optimize** button shows up right of the composer → type a draft and click it.
-
-Two places tell you it worked: the button beside the composer, and a "Prompt Optimizer" entry in the plugin manager.
-
-Requires DSH ≥ 0.2.0-rc.1 and Node 22.19+ or 24+ (see `engines` in `package.json`).
-
-Other install targets:
+### Offline tarball or local source
 
 | Form | target |
 | --- | --- |
 | npm package name | `@infcel/dsh-prompt-optimizer` |
-| offline tgz (from `npm run release`) | `/abs/path/infcel-dsh-prompt-optimizer-1.0.3.tgz` |
+| offline tgz (from `npm run release`) | `/abs/path/infcel-dsh-prompt-optimizer-1.0.5.tgz` |
 | source directory under development | `<absolute path to this repo>` |
 
-Release process: [`RELEASING.md`](RELEASING.md).
+### Confirm it worked
+
+Restart Harness (bundle/patch are a boot snapshot) → a **✦ optimize** button shows up right of the composer → type a draft and click it.
+
+Two places tell you it worked: the button beside the composer, and a "Prompt Optimizer" entry in the plugin manager. Requires DSH ≥ 0.2.0-rc.1 and Node 22.19+ or 24+ (see `engines` in `package.json`). Release process: [`RELEASING.md`](RELEASING.md).
 
 It looks roughly like this once installed (the composer at the bottom holds your draft):
 
@@ -60,8 +66,8 @@ The panel switches modes at the top: **auto** picks one by text heuristics, the 
 | Mode | Good for | What comes out |
 | --- | --- | --- |
 | Auto | You don't want to choose | Delegated to the heuristics below |
-| Structured | A reusable role prompt you'll keep | `# Role` + `## Profile / ## Skills / ## Rules / ## Workflows / ## Initialization`; Skills and Rules in three groups of four |
-| Analytical | Complex task, missing context or output format | `Role / Background / Attention / Profile / Skills / Goals / Constrains / Workflow / OutputFormat / Suggestions / Initialization`, most sections with five items |
+| Structured | A reusable role prompt you'll keep | `# 角色` + `## 适用场景 / ## 能力范围 / ## 工作约束 / ## 执行流程 / ## 开场方式`; capabilities split into "good at / not responsible for", constraints into "must / never / output" |
+| Analytical | Complex task, missing context or output format | `# 任务目标` + `## 前提与输入 / ## 分析维度 / ## 判定标准 / ## 执行顺序 / ## 输出格式 / ## 交付前自检`, with checkable acceptance criteria |
 | Polish | One vague sentence you want to send as-is | Flattened into a single paragraph: adds audience, scope, constraints and output form, no headings or lists (at most 3× the original length) |
 | Iterate | You have a finished draft and want one change | Keeps the existing structure; folds "this is what to change" into the text |
 
@@ -184,6 +190,10 @@ The dated, per-version log lives in [`docs/verification.md`](https://github.com/
 
 ## License and credits
 
-Template structure and wording are based on [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer) (AGPL-3.0); this plugin is a DSH-native rewrite of it.
+Released under **MIT**: the full [`LICENSE`](LICENSE) is in the repo and `package.json` carries the same value.
 
-Because it rewrites upstream prompt templates, the plugin is released under **AGPL-3.0-or-later** as well: the full [`LICENSE`](LICENSE) is in the repo and `package.json` carries the same value. Keep the upstream attribution and repo link when redistributing. Upstream templates live in `packages/core/src/services/template/default-templates/`.
+The four mode templates — skeletons and wording — are original to this project; no third-party template text was copied. The host routes, the client panel and its streaming parser are likewise independent work.
+
+The product idea is inspired by [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer), which showed that "one-click optimize next to the composer" is worth building; this plugin contains none of its code or prompt text.
+
+1.0.x shipped under AGPL-3.0 while it still echoed the upstream template expression; 1.1.0 rewrites the templates from scratch and moves to MIT.

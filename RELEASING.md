@@ -62,4 +62,4 @@ plugin_manager(action: "install_bundle", target: "<包名>")
 
 - 打 tag / 存一份 tgz 到 release 附件，`dist/` 不进 git。
 - 更新 `CHANGELOG.md`，版本号与 `package.json` 对齐。
-- 若上游 `linshenkx/prompt-optimizer` 的模板有更新，先同步 `lib/templates.js` 再发版；许可证是 AGPL-3.0-or-later，改模板不能换许可证。
+- `lib/templates.js` 的四种模板是本仓库原创，不跟进上游；许可证 MIT，可自由改写（改了记得同步 README 的模式表）。

@@ -187,6 +187,7 @@ window.__ModuleLoader__.load({
 		// ------------------------------------------------------------- helpers
 		let runId = 0;
 		let controller = null;
+		const instructionRef = { current: null };
 		let toastTimer = null;
 
 		const readPrefs = () => {
@@ -353,6 +354,12 @@ window.__ModuleLoader__.load({
 		};
 
 		async function runOptimize() {
+			// 迭代模式缺指令时别发请求：Host 会回 400，用户还得自己找原因。
+			if (state.mode === 'iterate' && state.instruction.trim() === '') {
+				instructionRef.current?.focus();
+				patch({ status: 'idle', error: null });
+				return;
+			}
 			const id = ++runId;
 			if (controller) controller.abort();
 			controller = new AbortController();
@@ -572,7 +579,10 @@ window.__ModuleLoader__.load({
 							onClick: () => {
 								patch({ mode: value });
 								savePrefs();
-								if (value === 'iterate') return;
+								if (value === 'iterate' && state.instruction.trim() === '') {
+									// 切到迭代就把光标放进指令框，省得点了优化才发现缺东西。
+									setTimeout(() => instructionRef.current?.focus(), 0);
+								}
 							},
 						},
 						t(value),
@@ -811,6 +821,9 @@ window.__ModuleLoader__.load({
 				mode === 'iterate'
 					? h('input', {
 							className: 'po-instruction',
+							ref: (node) => {
+								instructionRef.current = node;
+							},
 							value: state.instruction,
 							placeholder: t('instructionPlaceholder'),
 							disabled: busy,

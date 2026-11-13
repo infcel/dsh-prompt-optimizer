@@ -51,3 +51,18 @@ test('buildMessages 产出 llm.stream 需要的形状', () => {
 	assert.equal(messages[0].role, 'user');
 	assert.deepEqual(messages[0].content.map((block) => block.type), ['text']);
 });
+
+test('英文输出走英文骨架，中文与 auto 走中文骨架', () => {
+	const en = buildSystem({ mode: 'structured', language: 'en' });
+	assert.match(en, /# Role/);
+	assert.match(en, /## Operating constraints/);
+	assert.doesNotMatch(en, /## 工作约束/);
+
+	const zh = buildSystem({ mode: 'structured', language: 'zh' });
+	assert.match(zh, /## 工作约束/);
+	assert.doesNotMatch(zh, /## Operating constraints/);
+
+	const auto = buildSystem({ mode: 'structured', language: 'auto' });
+	assert.match(auto, /## 工作约束/);
+	assert.match(auto, /标题跟随输出语言/);
+});

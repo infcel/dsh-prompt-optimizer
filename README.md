@@ -11,33 +11,39 @@
 
 npm [`@infcel/dsh-prompt-optimizer`](https://www.npmjs.com/package/@infcel/dsh-prompt-optimizer) · 仓库 [infcel/dsh-prompt-optimizer](https://github.com/infcel/dsh-prompt-optimizer)
 
-模板思路移植自 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer)，调用链改成了 DSH 原生：**用当前会话的默认模型，不需要再配一套 API Key**。
+产品形态受 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer) 启发——把优化放进输入框，而不是另开一个工作台。模板与代码都是本仓库原创：**直接调用当前会话的默认模型，不需要再配一套 API Key**。
 
 ## 30 秒上手
 
-```
-# Desktop（应用内插件管理页安装，或让 agent 调这个工具）
-plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
+### Desktop
 
-# web / CLI profile（Desktop 的 profile 由 Electron 独占，这条会报 managed exclusively）
+在插件管理页点 **添加插件**，填包名；或者让 agent 调这个工具：
+
+```
+plugin_manager(action: "install_bundle", target: "@infcel/dsh-prompt-optimizer")
+```
+
+### web / CLI profile
+
+Desktop 的 profile 由 Electron 独占（`dsh plugin --profile desktop add` 会报 managed exclusively），所以这条只用于 web 或自建 profile：
+
+```
 dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 ```
 
-重启 Harness（bundle/patch 是启动快照）→ 输入框右侧出现 **✦ 优化** → 写一句草稿，点它。
-
-装没装好，看两处：输入框右侧有按钮，插件管理页里有「提示词优化」的条目。
-
-要求 DSH ≥ 0.2.0-rc.1，Node 22.19+ 或 24+（见 `package.json` 的 `engines`）。
-
-其他安装方式：
+### 离线包或本地源码
 
 | 方式 | target |
 | --- | --- |
 | npm 包名 | `@infcel/dsh-prompt-optimizer` |
-| 离线 tgz（`npm run release` 产出） | `/绝对路径/infcel-dsh-prompt-optimizer-1.0.3.tgz` |
+| 离线 tgz（`npm run release` 产出） | `/绝对路径/infcel-dsh-prompt-optimizer-1.0.5.tgz` |
 | 开发中的源码目录 | `<本仓库目录的绝对路径>` |
 
-发布流程见 [`RELEASING.md`](RELEASING.md)。
+### 装完确认
+
+重启 Harness（bundle/patch 是启动快照）→ 输入框右侧出现 **✦ 优化** → 写一句草稿，点它。
+
+装没装好，看两处：输入框右侧有按钮，插件管理页里有「提示词优化」的条目。要求 DSH ≥ 0.2.0-rc.1，Node 22.19+ 或 24+（见 `package.json` 的 `engines`）。发布流程见 [`RELEASING.md`](RELEASING.md)。
 
 装好后大概是这样（下方 composer 里就是你的草稿）：
 
@@ -60,8 +66,8 @@ dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 | 模式 | 适合 | 产出长什么样 |
 | --- | --- | --- |
 | 自动 | 懒得选 | 交给启发式，规则见下 |
-| 结构化 | 要一个能长期复用的角色提示词 | `# Role` + `## Profile / ## Skills / ## Rules / ## Workflows / ## Initialization`，Skills 与 Rules 各分三类、每类 4 条 |
-| 分析式 | 任务复杂、缺背景与输出格式 | `Role / Background / Attention / Profile / Skills / Goals / Constrains / Workflow / OutputFormat / Suggestions / Initialization` 逐节展开，多数小节 5 条 |
+| 结构化 | 要一个能长期复用的角色提示词 | `# 角色` + `## 适用场景 / ## 能力范围 / ## 工作约束 / ## 执行流程 / ## 开场方式`；能力分「擅长 / 不负责」，约束分「必须 / 禁止 / 输出」 |
+| 分析式 | 任务复杂、缺背景与输出格式 | `# 任务目标` + `## 前提与输入 / ## 分析维度 / ## 判定标准 / ## 执行顺序 / ## 输出格式 / ## 交付前自检`，判定标准要求可验证 |
 | 精修 | 一句话说得含糊，想要能直接发出 | 压成一段自然语言，补全对象/范围/约束/输出形式，不加标题与列表（长度不超过原文 3 倍） |
 | 迭代 | 已有成稿，只想改一处 | 保留原有结构，把「这次怎么改」融进原文 |
 
@@ -184,6 +190,10 @@ node --check index.js lib/*.js client.js
 
 ## 许可与致谢
 
-模板结构与文案思路来自 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer)（AGPL-3.0），本插件是其 DSH 原生改写。
+以 **MIT** 发布：仓库内附 [`LICENSE`](LICENSE) 全文，`package.json` 的 `license` 字段同值。
 
-因为改写了上游的提示词模板，本插件同样以 **AGPL-3.0-or-later** 发布：仓库内附 [`LICENSE`](LICENSE) 全文，`package.json` 的 `license` 字段同值。对外分发请保留上游署名与仓库链接。上游模板位于 `packages/core/src/services/template/default-templates/`。
+四种模式的模板骨架与文案是本项目原创实现，未复制第三方模板文本；Host 侧路由、Client 侧面板与流式解析同样是独立编写。
+
+产品形态参考了 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer)——它证明了「在输入框旁边做一键优化」这件事值得做，但本插件不含它的代码或提示词文本。
+
+1.0.x 曾因沿用上游模板表达而以 AGPL-3.0 发布；1.1.0 起重写为原创模板，改为 MIT。
