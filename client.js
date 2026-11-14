@@ -10,6 +10,12 @@ window.__ModuleLoader__.load({
 		const SLOT_PANEL = 'conversation.input.overlay';
 		const PREFS_KEY = 'dsh.prompt-optimizer.prefs';
 		const TOAST_MS = 4000;
+		// 主修饰键：菜单栏是 ⌘，Windows/Linux 是 Ctrl。客户端插件跑在浏览器里，
+		// 用 navigator 判定即可；测试环境没有 navigator 时退回 Ctrl，保证不抛错。
+		const IS_MAC =
+			typeof navigator !== 'undefined' &&
+			/Mac|iPhone|iPad|iPod/i.test((navigator.platform || '') + ' ' + (navigator.userAgent || ''));
+		const REPLACE_KEY = IS_MAC ? '⌘↵' : 'Ctrl+↵';
 
 		// ---------------------------------------------------------------- i18n
 		// 字典内联在客户端：插件的 locale/*.json 只服务插件管理页的标题与简介，
@@ -46,7 +52,7 @@ window.__ModuleLoader__.load({
 				overwrite: '覆盖为新结果',
 				cancel: '取消',
 				applied: '已替换草稿',
-				appliedHint: '一次可撤销的编辑，⌘Z 可还原。',
+				appliedHint: (undo) => `一次可撤销的编辑，${undo} 可还原。`,
 				undo: '撤销',
 				reoptimize: '重新优化',
 				copy: '复制',
@@ -100,7 +106,7 @@ window.__ModuleLoader__.load({
 				overwrite: 'Overwrite with result',
 				cancel: 'Cancel',
 				applied: 'Draft replaced',
-				appliedHint: 'One undoable edit — ⌘Z restores it.',
+				appliedHint: (undo) => `One undoable edit — ${undo} restores it.`,
 				undo: 'Undo',
 				reoptimize: 'Run again',
 				copy: 'Copy',
@@ -880,7 +886,7 @@ window.__ModuleLoader__.load({
 							onClick: () => replace(),
 						},
 						t('replace'),
-						h('kbd', null, '⌘↵'),
+						h('kbd', null, REPLACE_KEY),
 					),
 				),
 			);
@@ -918,8 +924,9 @@ window.__ModuleLoader__.load({
   font-size:16px;line-height:1;cursor:pointer;flex:0 0 auto}
 .po-x:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}
 .po-tabs{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-.po-tab{height:24px;padding:0 9px;border-radius:999px;border:1px solid transparent;background:transparent;
-  color:var(--dsw-alias-label-secondary);font:inherit;font-size:12px;cursor:pointer}
+.po-tab{height:24px;padding:0 10px;border-radius:12px;border:1px solid transparent;background:transparent;
+  color:var(--dsw-alias-label-secondary);font:inherit;font-size:12px;line-height:1;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;appearance:none;-webkit-appearance:none}
 .po-tab:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}
 .po-tab-on{background:var(--dsw-alias-interactive-bg-active);color:var(--dsw-alias-label-primary);border-color:var(--dsw-alias-border-l2)}
 .po-tab:disabled{opacity:.55;cursor:default}
@@ -965,7 +972,8 @@ window.__ModuleLoader__.load({
   background:var(--dsw-alias-brand-primary);color:var(--dsw-alias-bg-base);font:inherit;font-size:12px;font-weight:600;
   display:inline-flex;align-items:center;gap:6px;cursor:pointer}
 .po-primary:disabled{opacity:.45;cursor:default}
-.po-primary kbd{font:inherit;font-size:10px;line-height:1;opacity:.75;border:1px solid currentColor;border-radius:4px;padding:2px 3px;margin-left:2px;letter-spacing:1px}
+.po-primary kbd{font:inherit;font-size:10px;line-height:1;border:0;border-radius:5px;padding:2px 5px;margin-left:2px;
+  background:rgba(127,127,127,.25);background:color-mix(in srgb,currentColor 18%,transparent);letter-spacing:.02em}
 @media (prefers-color-scheme: light){.po-toast,.po-panel{box-shadow:0 16px 40px rgba(0,0,0,.12)}}
 `;
 

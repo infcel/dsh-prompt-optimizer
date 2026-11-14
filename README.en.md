@@ -88,7 +88,7 @@ Iterate mode adds one more input for your instruction, e.g. "shorter, keep the v
 
 **`@` references.** When the draft contains `@` reference chips, selection coordinates and string indices no longer share an origin, so it **always optimizes the whole draft** and shows a "contains @ references — optimizes the whole draft" banner. Better to rewrite too much than to write at the wrong offset.
 
-**Replace and undo.** It goes through `insertText`, one discrete undoable edit: ⌘Z (Ctrl+Z on Windows) restores in one step, not character by character. ⌘↵ in the result area replaces directly. A 4-second confirmation bar follows a successful replace.
+**Replace and undo.** It goes through `insertText`, one discrete undoable edit: ⌘Z (Ctrl+Z on Windows) restores in one step, not character by character. ⌘↵ in the result area replaces directly (Ctrl+↵ on Windows/Linux). A 4-second confirmation bar follows a successful replace.
 
 **Draft conflict.** If you edit the composer while a generation is running, the replace is blocked with "draft changed" and you must explicitly choose **overwrite with new result** — neither side's edits are swallowed silently.
 
@@ -181,7 +181,7 @@ Verified on a real host (DSH Desktop, light and dark themes):
 - a selection rewrites only that span, the rest is untouched;
 - `@` references in the draft switch it to whole-draft mode, with a banner;
 - editing the draft during generation is blocked and can be explicitly overridden;
-- one ⌘Z restores the original; ⌘↵ replaces directly;
+- one ⌘Z restores the original; ⌘↵ replaces directly (Ctrl+Z / Ctrl+↵ on Windows);
 - with no model in the host it enters the "no model service" state and sends nothing;
 - after a restart `fiberPhase=active` and both slot occupants are in place (rechecked on 1.1.0).
 
