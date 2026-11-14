@@ -1,5 +1,11 @@
 # 更新记录
 
+## 1.1.1
+
+- 补充 npm 检索用的 `keywords`（`dsh-client`、`prompt-optimizer`、`composer` 等），不改动运行时行为。
+- 新增仓库根 `screenshots.json`，供插件市场卡片读取截图；该文件不进入 npm 包。
+- 修正英文 README 的许可证徽章缓存参数，与中文版一致。
+
 ## 1.1.0
 
 - **许可证改为 MIT**。四种模式的模板骨架与文案重写为原创实现，不再沿用上游 `prompt-optimizer` 的模板表达；`LICENSE` 换成 MIT 全文，`package.json` 的 `license` 字段同步。

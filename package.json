@@ -1,6 +1,6 @@
 {
   "name": "@infcel/dsh-prompt-optimizer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": false,
   "license": "MIT",
   "author": {
@@ -42,8 +42,11 @@
   "keywords": [
     "dsh",
     "dsh-plugin",
+    "dsh-client",
     "prompt",
+    "prompt-optimizer",
     "prompt-engineering",
+    "composer",
     "deepseek",
     "harness"
   ],
