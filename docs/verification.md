@@ -7,7 +7,7 @@
 ## 门禁命令
 
 ```
-node --test test/*.test.mjs                                  # 47 条
+node --test test/*.test.mjs                                  # 48 条
 node ../plugin-dev/scripts/plugin-check.mjs . --strict        # 0 WARN / 0 FAIL
 node ../plugin-dev/scripts/plugin-check.mjs <tgz 解包目录> --strict
 ```

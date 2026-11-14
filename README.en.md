@@ -36,7 +36,7 @@ dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 | Form | target |
 | --- | --- |
 | npm package name | `@infcel/dsh-prompt-optimizer` |
-| offline tgz (from `npm run release`) | `/abs/path/infcel-dsh-prompt-optimizer-1.0.5.tgz` |
+| offline tgz (from `npm run release`) | `/abs/path/infcel-dsh-prompt-optimizer-1.1.1.tgz` |
 | source directory under development | `<absolute path to this repo>` |
 
 ### Confirm it worked
@@ -71,7 +71,7 @@ The panel switches modes at the top: **auto** picks one by text heuristics, the 
 | Polish | One vague sentence you want to send as-is | Flattened into a single paragraph: adds audience, scope, constraints and output form, no headings or lists (at most 3× the original length) |
 | Iterate | You have a finished draft and want one change | Keeps the existing structure; folds "this is what to change" into the text |
 
-Auto-mode rules (`lib/heuristic.js`, the same file on client and host):
+Auto-mode rules live in one place only — `lib/heuristic.js` on the host; the client asks `POST /classify` (300 ms debounce):
 
 | Condition | Result |
 | --- | --- |
@@ -80,7 +80,7 @@ Auto-mode rules (`lib/heuristic.js`, the same file on client and host):
 | Under 400 chars and no `#` heading | Polish |
 | Everything else | Analytical |
 
-Iterate mode adds one more input for your instruction, e.g. "shorter, keep the variables, add a don't-do list". It is a rewrite instruction, not a follow-up to the model — the plugin won't execute it.
+Iterate mode adds one more input for your instruction, e.g. "shorter, keep the variables, add a don't-do list". It is a rewrite instruction, not a follow-up to the model — the plugin won't execute it. Leave it empty and the panel focuses that field instead of sending a request.
 
 ## Interaction details
 
@@ -164,7 +164,7 @@ Model selection order: current default selection → first model of that provide
 ## Development and tests
 
 ```
-node --test test/*.test.mjs                                    # 47 passing
+node --test test/*.test.mjs                                    # 48 passing
 node plugin-dev/scripts/plugin-check.mjs dsh-prompt-optimizer  # 1 PASS / 0 WARN / 0 FAIL
 node --check index.js lib/*.js client.js
 ```
@@ -182,9 +182,10 @@ Verified on a real host (DSH Desktop, light and dark themes):
 - `@` references in the draft switch it to whole-draft mode, with a banner;
 - editing the draft during generation is blocked and can be explicitly overridden;
 - one ⌘Z restores the original; ⌘↵ replaces directly;
-- with no model in the host it enters the "no model service" state and sends nothing.
+- with no model in the host it enters the "no model service" state and sends nothing;
+- after a restart `fiberPhase=active` and both slot occupants are in place (rechecked on 1.1.0).
 
-**Not verified yet**: drafts over 20,000 characters (the guard has unit tests, the real hint was never triggered), an actual upstream 429 (the error state was verified by injection), and a post-restart check of `fiberPhase` plus both slot occupants.
+**Not verified yet**: drafts over 20,000 characters (the guard has unit tests, the real hint was never triggered) and an actual upstream 429 (the error state was verified by injection).
 
 The dated, per-version log lives in [`docs/verification.md`](https://github.com/infcel/dsh-prompt-optimizer/blob/main/docs/verification.md).
 

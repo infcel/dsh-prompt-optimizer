@@ -36,7 +36,7 @@ dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 | 方式 | target |
 | --- | --- |
 | npm 包名 | `@infcel/dsh-prompt-optimizer` |
-| 离线 tgz（`npm run release` 产出） | `/绝对路径/infcel-dsh-prompt-optimizer-1.0.5.tgz` |
+| 离线 tgz（`npm run release` 产出） | `/绝对路径/infcel-dsh-prompt-optimizer-1.1.1.tgz` |
 | 开发中的源码目录 | `<本仓库目录的绝对路径>` |
 
 ### 装完确认
@@ -71,7 +71,7 @@ dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 | 精修 | 一句话说得含糊，想要能直接发出 | 压成一段自然语言，补全对象/范围/约束/输出形式，不加标题与列表（长度不超过原文 3 倍） |
 | 迭代 | 已有成稿，只想改一处 | 保留原有结构，把「这次怎么改」融进原文 |
 
-自动模式的判定（`lib/heuristic.js`，客户端与 Host 同一份）：
+自动模式的判定只有一份实现（Host 侧 `lib/heuristic.js`），客户端通过 `POST /classify` 取结果，300ms 防抖：
 
 | 条件 | 结果 |
 | --- | --- |
@@ -80,7 +80,7 @@ dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 | 400 字以内，且没有 `#` 标题 | 精修 |
 | 其余 | 分析式 |
 
-「迭代」模式会多出一个输入框，写你这次的修改意图，例如「再短一点，保留变量，加一个「不做」清单」。它是改写指令，不是给模型的追问——插件不会替你执行。
+「迭代」模式会多出一个输入框，写你这次的修改意图，例如「再短一点，保留变量，加一个「不做」清单」。它是改写指令，不是给模型的追问——插件不会替你执行。留空时点优化不会发请求，而是把光标落回这个输入框。
 
 ## 交互细节
 
@@ -164,7 +164,7 @@ dsh plugin --profile web add @infcel/dsh-prompt-optimizer
 ## 开发与测试
 
 ```
-node --test test/*.test.mjs                                    # 47 passing
+node --test test/*.test.mjs                                    # 48 passing
 node plugin-dev/scripts/plugin-check.mjs dsh-prompt-optimizer  # 1 PASS / 0 WARN / 0 FAIL
 node --check index.js lib/*.js client.js
 ```
@@ -182,9 +182,10 @@ node --check index.js lib/*.js client.js
 - 草稿含 `@` 引用时按整段优化，面板显示横幅；
 - 生成期间改草稿会被拦下，可显式覆盖；
 - 替换后一次 ⌘Z 还原；⌘↵ 直接替换；
-- 宿主没有模型时进「未提供模型服务」态，不发请求。
+- 宿主没有模型时进「未提供模型服务」态，不发请求；
+- 重启后 `fiberPhase=active`，两个 slot occupant 各就位（1.1.0 复核）。
 
-**还没验的**：超过 2 万字的草稿（预检逻辑有单测，真机提示未走过）、上游 429 的真实触发（用注入方式验过错误态）、重启后 `fiberPhase` 与两个 slot occupant 的复核。
+**还没验的**：超过 2 万字的草稿（预检逻辑有单测，真机提示未走过）、上游 429 的真实触发（用注入方式验过错误态）。
 
 逐次记录（日期、版本、当时结论）在 [`docs/verification.md`](https://github.com/infcel/dsh-prompt-optimizer/blob/main/docs/verification.md)。
 
@@ -195,5 +196,3 @@ node --check index.js lib/*.js client.js
 四种模式的模板骨架与文案是本项目原创实现，未复制第三方模板文本；Host 侧路由、Client 侧面板与流式解析同样是独立编写。
 
 产品形态参考了 [linshenkx/prompt-optimizer](https://github.com/linshenkx/prompt-optimizer)——它证明了「在输入框旁边做一键优化」这件事值得做，但本插件不含它的代码或提示词文本。
-
-1.0.x 曾因沿用上游模板表达而以 AGPL-3.0 发布；1.1.0 起重写为原创模板，改为 MIT。
